@@ -2,7 +2,7 @@
 
 Русская версия [README.ru.md](https://github.com/Empty-Developer/Paywall-Mobile-App/blob/developer/README.ru.md)
 
-
+![Platform Preview](/img/img.png)
 
 A React Native / Expo template demonstrating a complete paywall onboarding flow: **Onboarding -> Paywall -> Main content**. State is persisted locally so the flow survives app restarts. Purchase logic is currently simulated and ready to be wired up to a real payment provider.
 
