@@ -1,11 +1,14 @@
 import React from "react";
 import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Plus, Search, LayoutGrid } from "lucide-react-native";
+import { Plus, Search, LayoutGrid, RotateCcw } from "lucide-react-native";
 import { CustomText } from "../components/ui/CustomText";
 import { ProfileCard } from "../components/ui/ProfileCard";
+import { useSubscription } from "../context/SubscriptionContext";
 
 export const MainScreen: React.FC = () => {
+  const { resetSubscription } = useSubscription(); // reset
+
   const PROFILES = [
     {
       id: "1",
@@ -71,10 +74,19 @@ export const MainScreen: React.FC = () => {
             <Search color="#FFFFFF" size={22} strokeWidth={1.8} />
           </TouchableOpacity>
         </View>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <TouchableOpacity
+            style={[styles.iconButtonRight, { marginRight: 16 }]}
+            activeOpacity={0.7}
+            onPress={resetSubscription}
+          >
+            <RotateCcw color="#FF453A" size={22} strokeWidth={1.8} />
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.iconButtonRight} activeOpacity={0.7}>
-          <LayoutGrid color="#FFFFFF" size={22} strokeWidth={1.8} />
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButtonRight} activeOpacity={0.7}>
+            <LayoutGrid color="#FFFFFF" size={22} strokeWidth={1.8} />
+          </TouchableOpacity>
+        </View>
       </View>
       {/*
           up to 10 is enough for now and ScrollView + map
@@ -84,7 +96,6 @@ export const MainScreen: React.FC = () => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-
         <View style={styles.titleContainer}>
           <CustomText variant="title" style={styles.mainTitle}>
             Select AI
