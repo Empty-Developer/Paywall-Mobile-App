@@ -1,16 +1,14 @@
 # Paywall Mobile App
 
-Русская версия README.ru.md
 
 
-
-A React Native / Expo template demonstrating a complete paywall onboarding flow: **Onboarding -> Paywall -> Main content**. State is persisted locally so the flow survives app restarts. Purchase logic is currently simulated and ready to be wired up to a real payment provider.
+React Native / Expo, демонстрирующий полный процесс регистрации с использованием платного доступа: **Регистрация -> Платный доступ -> Основной контент**. Состояние сохраняется локально, поэтому процесс сохраняется даже после перезапуска приложения. Логика покупок в настоящее время имитируется и готова к подключению к реальному платежному провайдеру.
 
 ---
 
-## Stack
+## Стек
 
-| Layer | Technology |
+| Название | Технологии |
 |---|---|
 | Framework | Expo 56 / React Native 0.85 |
 | Language | TypeScript 6 |
@@ -22,9 +20,9 @@ A React Native / Expo template demonstrating a complete paywall onboarding flow:
 
 ---
 
-## Architecture
+## Архитектура
 
-Navigation is driven entirely by subscription state there are no separate routes for each screen. The single root route (`src/app/index.tsx`) reads from `SubscriptionContext` and renders the appropriate screen:
+Навигация полностью зависит от состояния подписки; отдельных маршрутов для каждого экрана не существует. Единственный корневой маршрут (`src/app/index.tsx`) считывает данные из `SubscriptionContext` и отображает соответствующий экран:
 
 ```
 App Launch
@@ -38,54 +36,54 @@ App Launch
     └── (default)  ->  OnboardingScreen
 ```
 
-**Why state-based instead of route-based?** The flow is strictly linear with no back-navigation, so routing would add complexity without benefit. See the comment in `src/app/index.tsx`.
+**Почему используется подход на основе состояний, а не маршрутов?** Поток строго линейный и не предусматривает возврат по предыдущим страницам, поэтому использование маршрутов только усложнило бы код, не принося при этом никакой пользы. См. комментарий в файле `src/app/index.tsx`..
 
-### Subscription state
+### Состаяние Подписки
 
-`SubscriptionContext` (`src/context/SubscriptionContext.tsx`) is the single source of truth for user status. It manages two booleans:
+`SubscriptionContext` (`src/context/SubscriptionContext.tsx`) является единственным достоверным источником информации о статусе пользователя. Он управляет двумя булевыми значениями:
 
-- `isPremium` : whether the user has purchased a subscription
-- `hasSeenOnboarding` : whether the user has completed onboarding
+- `isPremium` : приобрел ли пользователь подписку
+- `hasSeenOnboarding` : завершил ли пользователь процесс просмотра предыдущих страниц
 
-Both are persisted via `AsyncStorage` so the correct screen is shown immediately on re-launch.
+Оба сохраняются с помощью `AsyncStorage`, поэтому при повторном запуске сразу отображается нужный экран.
 
 | Method | What it does |
 |---|---|
-| `completeOnboarding()` | Marks onboarding as seen, advances to Paywall |
-| `purchaseSubscription()` | Marks user as premium, advances to Main |
-| `resetSubscription()` | Clears both keys  useful for dev/testing |
+| `completeOnboarding()` | Прошел вводный курс, переходит к платной подписке |
+| `purchaseSubscription()` | Помечает пользователя как премиум-пользователя, перемещает в раздел «Main» |
+| `resetSubscription()` | Очищает оба ключа : полезно при разработке и тестировании |
 
 ---
 
-## Project Structure
+## Структура Проекта
 
 ```
 mobile/
-├── app.json                  # Expo config (name, icons, plugins)
-├── package.json              # Dependencies
+├── app.json                  # Expo конфигурация (name, icons, plugins)
+├── package.json              # Зависимости
 ├── assets/
 │   └── images/               # App icon, logo, onboarding & profile images
 └── src/
     ├── app/
     │   ├── _layout.tsx       # Root layout: SubscriptionProvider + splash screen
-    │   └── index.tsx         # Entry point conditional screen renderer
+    │   └── index.tsx         # Рендерер экрана с условной точкой входа
     ├── context/
-    │   └── SubscriptionContext.tsx   # Global subscription state + AsyncStorage
+    │   └── SubscriptionContext.tsx   # Общее состояние подписки + AsyncStorage
     ├── screens/
-    │   ├── OnboardingScreen.tsx      # Multi-step onboarding (paginated)
-    │   ├── PaywallScreen.tsx         # Plan selection + purchase CTA
-    │   └── MainScreen.tsx            # Premium content (profile grid)
+    │   ├── OnboardingScreen.tsx      # Многоэтапная регистрация (с разбивкой на страницы)
+    │   ├── PaywallScreen.tsx         # Выбор плана + кнопка призыва к действию для покупки
+    │   └── MainScreen.tsx            # Премиум-контент (сетка профилей)
     └── components/
         └── ui/
-            ├── Button.tsx            # Primary CTA button
-            ├── CustomText.tsx        # Typed text component (title, skip, body)
-            ├── TariffCard.tsx        # Selectable pricing plan card
-            └── ProfileCard.tsx       # User profile tile (avatar + username)
+            ├── Button.tsx            # Основная кнопка призыва к действию
+            ├── CustomText.tsx        # Компонент набранного текста (title, skip, body)
+            ├── TariffCard.tsx        # Карта с возможностью выбора тарифного плана
+            └── ProfileCard.tsx       # Плитка профиля AI (avatar + name)
 ```
 
 ---
 
-## Getting Started
+## Начало работы
 
 ```bash
 cd mobile
@@ -94,31 +92,31 @@ bunx expo start
 ```
 
 Open in:
-- **iOS Simulator** : press `i`
-- **Android Emulator** : press `a`
-- **Expo Go** : scan the QR code
+- **iOS Simulator** : нажмите `i`
+- **Android Emulator** : нажмите `a`
+- **Expo Go** : Отсканируйте QR коде
 
-To reset the subscription state (return to onboarding), call `resetSubscription()` from any screen that has access to the context, or clear AsyncStorage manually.
-
----
-
-## Key Design Decisions
-
-**State-driven screen routing** : A single index route conditionally renders one of three screens. Avoids unnecessary navigation stack complexity for a linear, non-reversible flow.
-
-**AsyncStorage for persistence** : Keeps the simulator/device state intact across restarts without needing a backend. Currently used as a stub for real purchase receipts.
-
-**Simulated purchase** : `PaywallScreen` uses a `setTimeout` to mimic async billing behavior. This is intentional scaffolding; swap it out for a real SDK call.
-
-**Dark-first theme** : Background color `#18191B` is hardcoded throughout. A future improvement is to move this to a shared theme/token file.
+Чтобы сбросить состояние подписки (вернуться к этапу регистрации), вызовите функцию `resetSubscription()` с любого экрана, имеющего доступ к контексту, или очистите AsyncStorage вручную.
 
 ---
 
-## Next Steps / TODOs
+## Основные проектные решения
 
-- [ ] **Wire up real payments** : Integrate RevenueCat (or StoreKit/Billing directly) in `purchaseSubscription()`. The context interface is already designed for an async call.
-- [ ] **Add restore purchases** : Standard App Store requirement. The context has a `resetSubscription` hook that can be repurposed.
-- [ ] **Extract theme tokens** : Move `#18191B` and other hardcoded values into a `constants/colors.ts` file.
-- [ ] **Onboarding content** : Replace placeholder copy and images in `OnboardingScreen.tsx`'s `DATA` array with real content.
-- [ ] **Error handling** : AsyncStorage calls currently swallow errors silently; surface them to the user.
-- [ ] **Testing** : Add Jest unit tests for `SubscriptionContext` state transitions and screen rendering logic.
+**Маршрутизация экранов на основе состояния**: один индексный маршрут условно отображает один из трех экранов. Это позволяет избежать излишней сложности стека навигации при линейном, необратимом потоке.
+
+**AsyncStorage для сохранения данных**: позволяет сохранять состояние симулятора/устройства при перезапуске без использования бэкэнда. В настоящее время используется в качестве заглушки для реальных квитанций о покупках.
+
+**Имитация покупки**: `PaywallScreen` использует `setTimeout` для имитации асинхронного процесса оплаты. Это сделано специально; замените его на реальный вызов SDK.
+
+**Темная тема**: Цвет фона `#18191B` повсеместно задан жестко. В будущем планируется перенести его в общий файл темы/токенов.
+
+---
+
+## Следующие шаги / TODOs
+
+- [ ] **Подключить реальные платежи**: интегрировать RevenueCat (или напрямую StoreKit/Billing) в `purchaseSubscription()`. Интерфейс контекста уже подготовлен для асинхронного вызова.
+- [ ] **Добавить функцию восстановления покупок**: стандартное требование App Store. В контексте есть хук `resetSubscription`, который можно перепрофилировать.
+- [ ] **Извлечение токенов тем** : Переместите `#18191B` и другие жестко запрограммированные значения в файл `constants/colors.ts`.
+- [ ] **Контент для введения** : Замените заполняющий текст и изображения в массиве `DATA` файла `OnboardingScreen.tsx` реальным контентом.
+- [ ] **Обработка ошибок** : Вызовы AsyncStorage в настоящее время скрывают ошибки; отобразите их пользователю.
+- [ ] **Тестирование** : Добавьте модульные тесты Jest для переходов состояния `SubscriptionContext` и логики рендеринга экрана.
