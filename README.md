@@ -1,6 +1,6 @@
 # Paywall Mobile App
 
-Русская версия README.ru.md
+Русская версия [README.ru.md](https://github.com/Empty-Developer/Paywall-Mobile-App/blob/developer/README.ru.md)
 
 
 
